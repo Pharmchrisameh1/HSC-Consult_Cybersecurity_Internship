@@ -1,0 +1,41 @@
+MODULE 2 FORENSIC INVESTIGATION NOTES
+
+1. COMPROMISED PROCESS
+Process: svchost.exe
+PID: 3880
+
+2. PARENT-CHILD RELATIONSHIP
+Parent: notepad.exe
+Parent PID: 2550
+Relationship:
+notepad.exe (2550) -> svchost.exe (3880)
+
+Reason suspicious:
+svchost.exe PID 3880 has an abnormal parent relationship compared
+with the other svchost.exe processes, which are children of
+services.exe PID 512.
+
+3. MEMORY EVIDENCE
+Memory Address: 0x400000
+Protection: PAGE_EXECUTE_READWRITE
+Magic Bytes: 4D 5A
+ASCII: MZ
+Interpretation:
+The memory region is readable, writable and executable and begins
+with a PE executable header.
+
+4. NETWORK EVIDENCE
+Compromised PID: 3880
+Destination IP: 185.112.55.20
+Destination Port: 443
+Protocol: TCP
+State: ESTABLISHED
+
+5. ATTACK CLASSIFICATION
+Process Injection / In-Memory PE Execution
+
+6. CONFIDENCE / LIMITATION
+The evidence strongly supports malicious executable content in
+the memory of PID 3880 and suspicious external communication.
+The supplied artifacts do not conclusively distinguish between
+Process Hollowing, DLL Injection and Reflective Loading.
