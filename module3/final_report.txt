@@ -1,0 +1,423 @@
+MODULE 3: OPERATION OVERCAST
+AWS CLOUD FORENSICS INVESTIGATION REPORT
+============================================================
+
+1. OBJECTIVE
+------------------------------------------------------------
+The objective of this investigation was to analyze the supplied
+AWS CloudTrail logs and reconstruct the suspicious activity.
+
+The investigation focused on:
+- Identifying the compromised AWS access key
+- Identifying the initial attacker IP address
+- Identifying the second/persistence IP address
+- Investigating privilege escalation
+- Decoding Base64-encoded values
+- Identifying the stolen S3 object
+- Identifying the backdoor IAM user
+- Investigating attempts to disable logging and destroy data
+
+2. TOOLS USED
+------------------------------------------------------------
+- WSL / Linux terminal
+- jq
+- base64
+- Bash
+
+Dataset:
+cloudtrail_log_dump.json
+
+
+3. INITIAL LOG REVIEW
+------------------------------------------------------------
+Command:
+jq -r '.[] | [.eventTime, .sourceIPAddress, .eventSource, .eventName] | @tsv' cloudtrail_log_dump.json
+
+Purpose:
+To extract the timestamp, source IP, AWS service and API event
+from every CloudTrail record. This provides a simplified
+timeline for identifying suspicious activity.
+
+Key observation:
+The timeline showed repeated activity from 190.45.112.3 and
+later activity from 45.33.10.11.
+
+
+4. IDENTIFY THE COMPROMISED ACCESS KEY
+------------------------------------------------------------
+Command:
+jq -r '.[] | select(.userIdentity.accessKeyId != null) | [.eventTime, .sourceIPAddress, .userIdentity.accessKeyId, .eventName] | @tsv' cloudtrail_log_dump.json
+
+Purpose:
+To display CloudTrail events containing an AWS Access Key ID and
+correlate the key with timestamps, source IP addresses and API
+operations.
+
+Finding:
+The access key associated with the main suspicious activity was:
+
+AKIA_DEV_PROD_9982
+
+The key was repeatedly used from:
+
+190.45.112.3
+
+Important associated events included:
+- GetCallerIdentity
+- GetAccountSummary
+- ListBuckets
+- ListUserPolicies
+- ListAttachedUserPolicies
+- GetSessionToken
+- PutUserPolicy
+- GetSecretValue
+- GetObject
+- CreateUser
+- AttachUserPolicy
+
+
+5. IDENTIFY THE SUSPICIOUS IP ADDRESSES
+------------------------------------------------------------
+Command:
+jq -r '.[] | select(.sourceIPAddress == "190.45.112.3" or .sourceIPAddress == "45.33.10.11") | [.eventTime, .sourceIPAddress, .eventName] | @tsv' cloudtrail_log_dump.json
+
+Purpose:
+To filter the CloudTrail dataset to the two suspicious external
+IP addresses and reconstruct their activity.
+
+Finding:
+The first observed activity from 190.45.112.3 was:
+
+2026-04-20T01:15:33Z
+GetCallerIdentity
+
+The first observed activity from 45.33.10.11 was:
+
+2026-04-20T03:35:45Z
+CreateAccessKey
+
+The activity therefore shifted from the initial suspicious IP to
+a second IP during the attack.
+
+
+6. INVESTIGATE BASE64-ENCODED DATA
+------------------------------------------------------------
+Command:
+jq -r '.[] | select(.requestParameters.content != null or .responseElements.secretString != null) | [.eventTime, .eventName, .requestParameters.content, .responseElements.secretString] | @tsv' cloudtrail_log_dump.json
+
+Purpose:
+To locate CloudTrail events containing content or secret values
+that could contain encoded or sensitive information.
+
+Two Base64 strings were identified.
+
+First value:
+c2V0dGluZzogYmFja3VwX2VuYWJsZWQ9dHJ1ZQ==
+
+Second value:
+ZGJfcGFzczogUEBzc3cwcmRfQ2xvdWRfMjAyNiE=
+
+
+7. DECODE THE FIRST BASE64 VALUE
+------------------------------------------------------------
+Command:
+echo 'c2V0dGluZzogYmFja3VwX2VuYWJsZWQ9dHJ1ZQ==' | base64 -d
+
+Decoded result:
+setting: backup_enabled=true
+
+Purpose:
+To convert the Base64-encoded value into readable text.
+
+Interpretation:
+The value represents a backup configuration setting.
+
+
+8. DECODE THE SECOND BASE64 VALUE
+------------------------------------------------------------
+Command:
+echo 'ZGJfcGFzczogUEBzc3cwcmRfQ2xvdWRfMjAyNiE=' | base64 -d
+
+Decoded result:
+db_pass: [REDACTED]
+
+Purpose:
+To identify the content of the second encoded value.
+
+Interpretation:
+The decoded value contains a database password credential.
+The actual credential is intentionally redacted from this report.
+
+
+9. INVESTIGATE PRIVILEGE ESCALATION
+------------------------------------------------------------
+Command:
+jq -r '.[] | select(.eventName == "PutUserPolicy" or .eventName == "AttachUserPolicy") | [.eventTime, .sourceIPAddress, .eventName, .requestParameters.userName, .requestParameters.policyName, .requestParameters.policyArn] | @tsv' cloudtrail_log_dump.json
+
+Purpose:
+To identify IAM policy changes that could increase the
+permissions of an existing or newly created user.
+
+Findings:
+
+2026-04-20T02:50:33Z
+Source IP: 190.45.112.3
+Event: PutUserPolicy
+User: dev_user_musa
+Policy: FullAdmin
+
+A later privilege escalation event was:
+
+2026-04-20T03:25:33Z
+Source IP: 190.45.112.3
+Event: AttachUserPolicy
+User: support_service_backup
+Policy: arn:aws:iam::aws:policy/AdministratorAccess
+
+These events show that administrative privileges were granted
+during the attack sequence.
+
+
+10. IDENTIFY THE STOLEN S3 OBJECT
+------------------------------------------------------------
+Command:
+jq -r '.[] | select(.eventName == "GetObject") | [.eventTime, .sourceIPAddress, .requestParameters.bucketName, .requestParameters.key] | @tsv' cloudtrail_log_dump.json
+
+Purpose:
+To identify S3 objects retrieved during the suspicious activity.
+
+Finding:
+
+Time:
+2026-04-20T03:10:44Z
+
+Source IP:
+190.45.112.3
+
+Bucket:
+top-secret-financials-2026
+
+Object:
+ceo_personal_taxes_2025.pdf
+
+This indicates that the suspicious IP retrieved the identified
+sensitive S3 object.
+
+
+11. IDENTIFY THE BACKDOOR USER
+------------------------------------------------------------
+Command:
+jq -r '.[] | select(.eventName == "CreateUser") | [.eventTime, .sourceIPAddress, .requestParameters.userName] | @tsv' cloudtrail_log_dump.json
+
+Purpose:
+To identify newly created IAM users during the incident.
+
+Finding:
+
+Time:
+2026-04-20T03:15:22Z
+
+Source IP:
+190.45.112.3
+
+User:
+support_service_backup
+
+The account was subsequently associated with the
+AdministratorAccess policy.
+
+
+12. INVESTIGATE THE BACKDOOR USER
+------------------------------------------------------------
+Command:
+jq -r '.[] | select(.requestParameters.userName == "support_service_backup") | [.eventTime, .sourceIPAddress, .eventName, (.requestParameters.policyArn // ""), (.requestParameters.accessKeyId // ""), (.requestParameters.policyName // "")] | @tsv' cloudtrail_log_dump.json
+
+Purpose:
+To correlate actions involving the newly created backdoor user.
+
+Finding:
+
+2026-04-20T03:15:22Z
+CreateUser
+
+2026-04-20T03:25:33Z
+AttachUserPolicy
+AdministratorAccess
+
+2026-04-20T03:35:45Z
+CreateAccessKey
+
+This sequence indicates that the newly created account was
+given administrative privileges and then associated with an
+access key.
+
+
+13. INVESTIGATE CLOUDTRAIL LOGGING ACTIVITY
+------------------------------------------------------------
+Command:
+jq -r '.[] | select(.eventName == "StopLogging") | [.eventTime, .sourceIPAddress, .userIdentity.accessKeyId, (.errorCode // "SUCCESS")] | @tsv' cloudtrail_log_dump.json
+
+Purpose:
+To identify attempts to stop CloudTrail logging and determine
+whether the operation succeeded or failed.
+
+Observed event:
+
+2026-04-20T03:40:00Z
+Source IP: 45.33.10.11
+Event: StopLogging
+
+The supplied timeline confirms that the attacker attempted to
+stop CloudTrail logging. The success or failure status should
+be determined from the errorCode field in the original event
+before claiming that logging was successfully disabled.
+
+
+14. INVESTIGATE THE FINAL DELETE BUCKET ACTION
+------------------------------------------------------------
+Command:
+jq -r '.[] | select(.eventName == "DeleteBucket") | [.eventTime, .sourceIPAddress, .userIdentity.accessKeyId, .requestParameters.bucketName, (.errorCode // "SUCCESS")] | @tsv' cloudtrail_log_dump.json
+
+Purpose:
+To determine whether the attacker attempted to delete an S3
+bucket and whether the deletion succeeded.
+
+Finding:
+
+Time:
+2026-04-20T04:10:00Z
+
+Source IP:
+45.33.10.11
+
+Access Key:
+AKIA_FAKE_BACKDOOR_KEY_7721
+
+Result:
+AccessDenied
+
+Interpretation:
+The attacker attempted to delete the S3 bucket, but the
+operation was denied. Therefore, the evidence does not support
+claiming that the bucket was successfully deleted.
+
+This activity is consistent with an attempted destructive or
+evasive action after the earlier access to sensitive data.
+
+
+15. INCIDENT TIMELINE
+------------------------------------------------------------
+
+01:15:33Z  190.45.112.3
+           GetCallerIdentity
+           Initial suspicious activity observed.
+
+01:23:45Z  10.0.1.55
+           PutObject
+           Base64 value containing backup configuration identified.
+
+02:30:10Z  190.45.112.3
+           GetSessionToken
+           Session credential activity observed.
+
+02:50:33Z  190.45.112.3
+           PutUserPolicy
+           FullAdmin policy applied to dev_user_musa.
+
+03:02:11Z  190.45.112.3
+           GetSecretValue
+           Database credential value accessed.
+
+03:10:44Z  190.45.112.3
+           GetObject
+           ceo_personal_taxes_2025.pdf retrieved from
+           top-secret-financials-2026.
+
+03:15:22Z  190.45.112.3
+           CreateUser
+           support_service_backup created.
+
+03:25:33Z  190.45.112.3
+           AttachUserPolicy
+           AdministratorAccess assigned to support_service_backup.
+
+03:35:45Z  45.33.10.11
+           CreateAccessKey
+           New access key created.
+
+03:40:00Z  45.33.10.11
+           StopLogging
+           Attempt to stop CloudTrail logging.
+
+04:05:44Z  45.33.10.11
+           GetCallerIdentity
+           Activity using the second credential/IP.
+
+04:10:00Z  45.33.10.11
+           DeleteBucket
+           Bucket deletion attempt was denied.
+
+
+16. KEY FINDINGS
+------------------------------------------------------------
+
+1. Compromised Access Key:
+   AKIA_DEV_PROD_9982
+
+2. Initial suspicious IP:
+   190.45.112.3
+
+3. Second/persistence IP:
+   45.33.10.11
+
+4. Initial activity from the second IP:
+   2026-04-20T03:35:45Z - CreateAccessKey
+
+5. Privilege escalation:
+   2026-04-20T02:50:33Z - PutUserPolicy - FullAdmin
+
+6. Sensitive credential access:
+   2026-04-20T03:02:11Z - GetSecretValue
+
+7. Stolen S3 object:
+   top-secret-financials-2026/ceo_personal_taxes_2025.pdf
+
+8. Backdoor user:
+   support_service_backup
+
+9. Administrative privilege assigned to backdoor user:
+   AdministratorAccess
+
+10. Final relevant destructive action:
+    DeleteBucket attempt from 45.33.10.11
+
+11. Result of DeleteBucket:
+    AccessDenied
+
+
+17. CONCLUSION
+------------------------------------------------------------
+The CloudTrail investigation reconstructed a sequence of
+suspicious AWS activity beginning with 190.45.112.3 using the
+access key AKIA_DEV_PROD_9982.
+
+The activity included reconnaissance, IAM privilege escalation,
+access to sensitive Secrets Manager data, retrieval of a
+sensitive S3 object, creation of the support_service_backup
+IAM account, assignment of AdministratorAccess, and creation
+of an additional access key.
+
+Activity subsequently appeared from 45.33.10.11. This address
+was associated with the newly created access key and was later
+used for additional IAM and S3 activity.
+
+The attacker also attempted to interfere with CloudTrail
+logging and attempted to delete an S3 bucket. The DeleteBucket
+operation was explicitly recorded as AccessDenied, so the
+evidence indicates an unsuccessful deletion attempt rather
+than a confirmed bucket deletion.
+
+Overall, the CloudTrail evidence provides a chronological
+record of credential use, privilege escalation, sensitive-data
+access, persistence, and attempted defensive evasion.
+
