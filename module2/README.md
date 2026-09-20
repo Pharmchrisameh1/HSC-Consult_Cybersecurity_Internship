@@ -99,10 +99,13 @@ grep "2550" pstree_output.txt
 
 The suspicious process hierarchy was examined and the chain manually reconstructed
 
+
 explorer.exe PID 1840
+
         |
         ↓
 notepad.exe PID 2550
+
         |
         ↓
 svchost.exe PID 3880
@@ -110,7 +113,9 @@ svchost.exe PID 3880
 
 The chain was compared with the other svchost.exe processes
 
+
 services.exe PID 512
+
         |
         ├── svchost.exe PID 720
         |
@@ -120,9 +125,13 @@ services.exe PID 512
 The windows architectural inconsistency was identified and recorded
 
 Suspicious parent-child relationship:
+
 notepad.exe PID 2550
+
         ↓
+
 svchost.exe PID 3880
+
 
 The Memory Artifact was analyzed by carrying out the following:
 
@@ -133,12 +142,15 @@ grep -A5 -B1 "Pid: 3880" malfind_results.txt
 The Memory Protection and Magic Bytes were recorded
 
 Memory Protection
+
 PAGE_EXECUTE_READWRITE
 
 Magic Bytes
+
 4d 5a
 
 The Magic Bytes were converted to ASCII
+
 4D 5A = MZ
 
 
@@ -153,22 +165,37 @@ grep "3880" netscan_results.txt
 A critical correlation was carried out between the Process, Memory, and the Network.
 
 Process Tree
+
 notepad.exe PID 2550
+
        ↓
+
 svchost.exe PID 3880
+
 
 Malfind
+
 svchost.exe PID 3880
+
        ↓
+
 PAGE_EXECUTE_READWRITE
+
        ↓
+
 4D 5A ("MZ")
 
+
 Network Scan
+
 svchost.exe PID 3880
+
        ↓
+
 185.112.55.20:443
+
        ↓
+
 ESTABLISHED
 
 The Attack was classified by Correlating the process hierarchy, memory flags, and network connections.
