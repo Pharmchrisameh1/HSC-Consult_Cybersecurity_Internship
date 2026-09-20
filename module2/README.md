@@ -141,11 +141,11 @@ grep -A5 -B1 "Pid: 3880" malfind_results.txt
 
 The Memory Protection and Magic Bytes were recorded
 
-Memory Protection
+**Memory Protection**
 
 PAGE_EXECUTE_READWRITE
 
-Magic Bytes
+**Magic Bytes**
 
 4d 5a
 
@@ -164,7 +164,7 @@ grep "3880" netscan_results.txt
 
 A critical correlation was carried out between the Process, Memory, and the Network.
 
-Process Tree
+**Process Tree**
 
 notepad.exe PID 2550
 
@@ -173,7 +173,7 @@ notepad.exe PID 2550
 svchost.exe PID 3880
 
 
-Malfind
+**Malfind**
 
 svchost.exe PID 3880
 
@@ -186,7 +186,7 @@ PAGE_EXECUTE_READWRITE
 4D 5A ("MZ")
 
 
-Network Scan
+**Network Scan**
 
 svchost.exe PID 3880
 
