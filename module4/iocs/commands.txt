@@ -1,0 +1,5 @@
+# ANY.RUN task-creation command
+"C:\\Windows\\System32\\schtasks.exe" /Create /TN "Updates\\fAjLxt" /XML "C:\\Users\\admin\\AppData\\Local\\Temp\\tmp23CF.tmp"
+
+# VirusTotal Behaviour reported this PowerShell command; do not assume it succeeded
+powershell.exe Add-MpPreference -ExclusionPath ...\\fAjLxt.exe

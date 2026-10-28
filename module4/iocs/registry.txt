@@ -1,0 +1,7 @@
+# VirusTotal Behaviour: scheduled-task registration artifacts
+HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tasks\\{DCB6180F-D606-4B83-9ECD-A3F6BBB2F6C5}\\DynamicInfo
+HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tasks\\{DCB6180F-D606-4B83-9ECD-A3F6BBB2F6C5}\\Hash
+HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tasks\\{DCB6180F-D606-4B83-9ECD-A3F6BBB2F6C5}\\Path
+HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tasks\\{DCB6180F-D606-4B83-9ECD-A3F6BBB2F6C5}\\Triggers
+HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tree\\Updates\\fAjLxt\\Id
+HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tree\\Updates\\fAjLxt\\Index

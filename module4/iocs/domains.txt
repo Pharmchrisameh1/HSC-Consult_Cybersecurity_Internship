@@ -1,0 +1,10 @@
+# Investigate / reported in sandbox or VirusTotal behaviour
+ip-api.com
+us2.smtp.mailhostbox.com
+
+# Observed in reported network relations; may be legitimate infrastructure
+crt.sectigo.com
+microsoft.com
+sectigo.com
+www.microsoft.com
+tse1.mm.bing.net

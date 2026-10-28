@@ -1,0 +1,8 @@
+indicator_type,indicator_value,associated_process,context,confidence
+SHA256,1adc29f30b30e301acefe1b46bbbd7a4f3a76c3708ab842199e95f8f5f053244,izup.exe,Sample hash reported by VirusTotal and ANY.RUN,High
+MD5,128c74791ca71718959ca82bbbf66dde,izup.exe,Sample hash reported by ANY.RUN,High
+Domain,ip-api.com,izup.exe,Observed HTTP request and sample-attributed network connection,High
+IPv4,208.95.112.1,izup.exe,Connection associated with ip-api.com,High
+Domain,us2.smtp.mailhostbox.com,izup.exe,Sample-attributed SMTP connection destination,High
+IPv4,208.91.199.224,izup.exe,Connection associated with us2.smtp.mailhostbox.com,High
+URL,http://ip-api.com/line/?fields=hosting,izup.exe,Observed HTTP GET request returned 200 OK,High

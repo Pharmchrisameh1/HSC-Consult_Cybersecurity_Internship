@@ -1,0 +1,12 @@
+# Observed HTTP request in ANY.RUN
+http://ip-api.com/line/?fields=hosting
+
+# Reported certificate retrievals; likely certificate/system infrastructure, not automatically malicious
+http://crt.sectigo.com/SectigoPublicCodeSigningCAR36.crt
+http://crt.sectigo.com/SectigoPublicCodeSigningRootR46.p7c
+http://www.microsoft.com/pki/certs/MicCodSigPCA_08-31-2010.crt
+http://www.microsoft.com/pki/certs/MicrosoftTimeStampPCA.crt
+
+# SMTP-related endpoint as represented in memory/network strings
+smtp://us2.smtp.mailhostbox.com
+http://us2.smtp.mailhostbox.com:587

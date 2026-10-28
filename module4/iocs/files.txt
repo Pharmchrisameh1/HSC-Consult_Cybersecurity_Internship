@@ -1,0 +1,10 @@
+# ANY.RUN file activity
+C:\\Users\\admin\\AppData\\Roaming\\fAjLxt.exe
+C:\\Users\\admin\\AppData\\Local\\Temp\\tmp23CF.tmp
+C:\\Users\\admin\\AppData\\Local\\Temp\\1adc29f30b30e301acefe1b46bbbd7a4f3a76c3708ab842199e95f8f5f053244.exe
+C:\\Windows\\System32\\Tasks\\Updates\\fAjLxt
+
+# VirusTotal Behaviour also reported these paths/artifacts
+%TEMP%\\tmp42A1.tmp
+%LOCALAPPDATA%\\Microsoft\\CLR_v4.0_32\\UsageLogs\\powershell.exe.log
+%LOCALAPPDATA%\\Microsoft\\CLR_v4.0_32\\UsageLogs\\program.exe.log

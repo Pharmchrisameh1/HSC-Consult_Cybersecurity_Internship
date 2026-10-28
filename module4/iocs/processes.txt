@@ -1,0 +1,7 @@
+izup.exe
+fAjLxt.exe
+schtasks.exe
+conhost.exe
+svchost.exe (DNS Client; observed in sandbox, not automatically malicious)
+powershell.exe (Defender exclusion command reported by VirusTotal Behaviour)
+WMIADAP.EXE (listed in VirusTotal process-injection behaviour; success requires corroboration)

@@ -1,0 +1,22 @@
+Module 4 IOC evidence notes
+Sample: izup.exe
+Primary SHA-256: 1adc29f30b30e301acefe1b46bbbd7a4f3a76c3708ab842199e95f8f5f053244
+
+Source: VirusTotal
+- Detection ratio: 59/70.
+- Reported as a PE32 GUI Intel 80386 .NET/Mono assembly, VB.NET, CLR v4.0.30319, unsigned.
+- Reported behaviour includes scheduled task activity, a PowerShell Defender-exclusion command, process-injection-related events, discovery/evasion tags, and browser/mail-client path access.
+- Network-related observations include ip-api.com and us2.smtp.mailhostbox.com; Microsoft/Sectigo certificate retrievals also appear.
+- Relations and Behaviour may aggregate different sandbox runs/submissions.
+
+Source: ANY.RUN
+- Windows 10 64-bit sandbox; analysis approximately 78 seconds.
+- Process tree included izup.exe, schtasks.exe, conhost.exe, another izup.exe, and svchost.exe.
+- Created C:\\Users\\admin\\AppData\\Roaming\\fAjLxt.exe; MD5 matched sample MD5.
+- Created/overwrote a temporary XML file and invoked schtasks.exe to create task Updates\\fAjLxt.
+- Sample-related process contacted ip-api.com at 208.95.112.1:80 for /line/?fields=hosting.
+- SMTP-related traffic to us2.smtp.mailhostbox.com on port 587 was observed; successful message delivery/exfiltration not established.
+- Browser/mail/VPN paths were probed; some paths returned not-found statuses.
+
+Interpretation
+The evidence is consistent with an Agent Tesla-related information stealer. A detection label or ATT&CK mapping is not by itself, proof that every behaviour succeeded.
