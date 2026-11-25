@@ -178,21 +178,31 @@ Have All Applications Migrated and Been Verified?
 Residual risk of keeping the key active for P1 applications
 The decision not to immediately revoke the compromised key for P1 applications reduces the risk of disrupting essential production services. However, it creates a period during which an attacker who possesses the exposed key may continue to use it.
 
-   **Risk	                                     Potential impact	                                         Mitigation**
+   **Risk	                                                     Potential impact	                                               Mitigation**
 
-Continued unauthorized access  An attacker could continue accessing services through the exposed key.	Monitor active sessions and contain external sources
-
-
-Data exposure	     Unauthorized users may access sensitive application information.        Review API access logs, permissions, and unusual data requests.
-
-
-Service impersonation	       An attacker may impersonate legitimate applications.	         Validate IP context, User-Agent, and application identity.
+Risk of continued unauthorized access  
+The potential impact is that an attacker could continue accessing services through the exposed key	
+Monitor active sessions and contain external sources to mitigate it
 
 
-Delayed credential rotation	  Compromised key remains usable as owners migrate their apps.	 Set a  30-minute migration window and escalate missed deadlines
+Data exposure risk	     
+Unauthorized users may access sensitive application information which could have a potential impact        
+Review API access logs, permissions, and unusual data requests to mitigate risk.
 
 
-Production disruption	 Immediate global rotation could break all 40 apps.	      Use a staged migration process and verify app readiness before revocation.
+Risk of service impersonation	
+Potential impact is that an attacker may impersonate legitimate applications	         
+It can be mitigated by validating IP context, User-Agent, and application identity.
+
+
+Risk of delayed credential rotation	  
+Compromised key remains usable as owners migrate their apps and this could have an impact	 
+Set a strict 30-minute migration window and escalate missed deadlines to mitigate the risk.
+
+
+Production disruption risk	 
+Immediate global rotation could break all 40 apps as a result of this	     
+It can be mitigated by the use of a staged migration process and verify app readiness before revocation.
 
 
 **Recommended risk-reduction measures**
